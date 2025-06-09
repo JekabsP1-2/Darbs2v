@@ -1,4 +1,3 @@
-// Jautājumu struktūra
 const questions = {
   start: {
     text: "Vai šobrīd vēlies būt produktīvs?",
@@ -45,37 +44,38 @@ const questions = {
   read_book: { text: "Varbūt ir laiks atvērt to grāmatu, kas sen stāv plauktā?", yes: null, no: null }
 };
 
-// Sākuma stāvoklis
 let currentKey = "start";
-const answers = []; // Saglabā atbildes
+let finalKey = null;
 
 function nextQuestion(answer) {
-  const questionText = questions[currentKey].text;
-  answers.push({ question: questionText, answer: answer === "yes" ? "Jā" : "Nē" });
-
   const nextKey = questions[currentKey][answer];
   if (nextKey && questions[nextKey]) {
     currentKey = nextKey;
     document.getElementById("question").innerText = questions[currentKey].text;
   } else {
-    showSummary(); // Kad beidzas, parāda kopsavilkumu
+    finalKey = currentKey;
+    showFinalResult();
   }
 }
 
-function showSummary() {
+function showFinalResult() {
   const container = document.getElementById("container");
-  let summaryHTML = "<h2>🌟 Tu esi pabeidzis savu ceļu!</h2>";
-  summaryHTML += "<h3>Tavas atbildes:</h3><ul>";
 
-  answers.forEach(item => {
-    summaryHTML += `<li><strong>${item.question}</strong> — ${item.answer}</li>`;
-  });
+  const results = {
+    choose_movie: `🎬 Tu šobrīd vēlies skatīties filmu. <a href="https://www.netflix.com" target="_blank">Ej uz Netflix</a>`,
+    read_book: `📚 Tu gribi lasīt grāmatu. <a href="https://www.letonika.lv" target="_blank">Ej uz Letonika</a>`,
+    go_walk: `🚶‍♂️ Tu vēlies iziet pastaigā. <a href="https://www.strava.com" target="_blank">Strava var ieteikt labākos maršrutus</a>`,
+    home_workout: `🏋️‍♀️ Tu izvēlējies trenēties mājās. <a href="https://www.youtube.com/results?search_query=home+workout" target="_blank">Skaties treniņus YouTube</a>`,
+    write_list: `📝 Tu vēlies uzrakstīt darāmo darbu sarakstu. <a href="https://todo.microsoft.com" target="_blank">Izmanto Microsoft To Do</a>`,
+    take_break: `😌 Tu vēlies atpūsties. <a href="https://www.calm.com" target="_blank">Calm var palīdzēt atslābināties</a>`,
+    start_task: `✅ Tu vēlies sākt ar mazāko uzdevumu. <a href="https://pomofocus.io" target="_blank">Pomofocus palīdzēs koncentrēties</a>`,
+    postpone_task: `⏳ Tu izvēlējies atlikt darbus. <a href="https://www.rememberthemilk.com" target="_blank">Atgādinājumam izmanto šo</a>`
+  };
 
-  summaryHTML += "</ul>";
-  container.innerHTML = summaryHTML;
+  const message = results[finalKey] || "🌟 Tu esi pabeidzis savu ceļu. Lepojies ar sevi!";
+  container.innerHTML = `<h2>${message}</h2>`;
 }
 
-// Ielādē pirmo jautājumu
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("question").innerText = questions[currentKey].text;
 });
